@@ -3,9 +3,12 @@ import { DisplayedComment } from "../types/DisplayedComment";
 const API_KEY = 'AIzaSyCPEDr5QVi6rbthmGTmqowctbm7-kfe4IY'
 
 export class YoutubeApi {
-    static async getRandomComment(videoId: string): Promise<DisplayedComment> {
+    static async getRandomComment(videoUrl: string): Promise<DisplayedComment> {
         try {
             let allComments = [] as DisplayedComment[];
+            const videoId = videoUrl.split("?v=")[1];
+            if (!videoId) throw new Error("The url is invalid");
+            
             const response = await fetch(`https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&key=${API_KEY}`);
 
             if (!response.ok) { // if the fetch failed, throw an error
@@ -24,7 +27,7 @@ export class YoutubeApi {
                 allComments = allComments.concat(currentThread.items.map(item => convertItemToComment(item)));
             }
 
-            if (allComments.length === 0) { // if there is no comments
+            if (allComments.length === 0) { // if there is no comments, throw an error
                 throw new Error(`No comments found for the given video`);
             }
 
@@ -40,6 +43,7 @@ export class YoutubeApi {
 
 function convertItemToComment(item: Item) {
     return {
+        username: item.snippet.topLevelComment.snippet.authorDisplayName,
         text: item.snippet.topLevelComment.snippet.textDisplay,
         authorProfileImageUrl: item.snippet.topLevelComment.snippet.authorProfileImageUrl,
         viewerRating: item.snippet.topLevelComment.snippet.viewerRating,
