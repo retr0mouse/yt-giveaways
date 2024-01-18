@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { YoutubeApi } from './api/YoutubeApi';
 import { DisplayedComment } from './types/DisplayedComment';
 import Confetti from 'react-confetti';
@@ -25,17 +25,19 @@ function App() {
     }
     setIsLoading(false);
     setParty(true);
-    // setTimeout(() => 
-    //   setParty(false)
-    // , 3000)
   }
+
+  useEffect(() => {
+    console.log(party);
+  }, [party]) 
 
   return (
     <>
       <h1>Pick a winner</h1>
       <div className="input-container">
         <label className="url-label" htmlFor="url-input">YouTube video URL</label>
-        <input className="url-input" type="text" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" value={videoUrl} onChange={(input) => setVideoUrl(input.target.value)} />
+        <input className="url-input" type="text" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" onKeyDown={(e) => (
+          e.key === 'Enter' ?  videoUrl ? getData(videoUrl): null : null)} value={videoUrl} onChange={(input) => setVideoUrl(input.target.value)} />
         <button onClick={() =>
           videoUrl ? getData(videoUrl) : null
         }>
@@ -49,13 +51,15 @@ function App() {
             :
             comment ?
               <>
-                <Confetti
+                party ? <Confetti     // this fuckery does not hide because it is a piece of shit
+                  width={window.innerWidth}
+                  height={window.innerHeight}
                   run={party}
                   onConfettiComplete={() => setParty(false)}
                   recycle={false}
                   numberOfPieces={1000}
-                />
-                <div className="comment-container">
+                /> : null
+               <div className="comment-container">
                   <img className="pfp" src={comment.authorProfileImageUrl} alt="Profile picture" />
                   <div className="comment-data">
                     <div className="comment-user">
@@ -63,12 +67,12 @@ function App() {
                       <p className="comment-text">{comment.text}</p>
                     </div>
                     <div className="comment-meta">
-                      <p className="like-count"><img height="30rem" src="../public/thumb-up.svg" alt="Thumb up" /> {comment.likeCount}</p>
+                      <p className="like-count"><img height="30rem" src="..thumb-up.svg" alt="Thumb up" /> {comment.likeCount}</p>
                       {/* <p className="rating">rating: {comment.viewerRating}</p> */}
                     </div>
                   </div>
-                </div>
-              </>
+               </div>
+               </>
               :
               <p>The winner will appear here</p>
         }
