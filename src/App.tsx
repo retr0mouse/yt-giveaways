@@ -51,14 +51,15 @@ function App() {
             :
             comment ?
               <>
-                party ? <Confetti     // this fuckery does not hide because it is a piece of shit
+                <Confetti
+                  style={{position: "fixed", top: 0, left: 0}}
                   width={window.innerWidth}
                   height={window.innerHeight}
                   run={party}
                   onConfettiComplete={() => setParty(false)}
-                  recycle={false}
                   numberOfPieces={1000}
-                /> : null
+                  recycle={false}
+                />
                <div className="comment-container">
                   <img className="pfp" src={comment.authorProfileImageUrl} alt="Profile picture" />
                   <div className="comment-data">
@@ -67,7 +68,7 @@ function App() {
                       <p className="comment-text">{comment.text}</p>
                     </div>
                     <div className="comment-meta">
-                      <p className="like-count"><img height="30rem" src="..thumb-up.svg" alt="Thumb up" /> {comment.likeCount}</p>
+                      <p className="like-count"><img height="30rem" src="../public/thumb-up.svg" alt="Thumb up" /> {comment.likeCount}</p>
                       {/* <p className="rating">rating: {comment.viewerRating}</p> */}
                     </div>
                   </div>
