@@ -1,44 +1,44 @@
+
 import { DisplayedComment } from "../types/DisplayedComment";
 
 const API_KEY = 'AIzaSyCPEDr5QVi6rbthmGTmqowctbm7-kfe4IY'
+const BASE_URL = 'https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet';
 
 export class YoutubeApi {
     static async getRandomComment(videoUrl: string): Promise<DisplayedComment> {
         try {
             let allComments = [] as DisplayedComment[];
             const videoId = videoUrl.split("?v=")[1];
-            if (!videoId) throw new Error("The url is invalid");
-            
-            const response = await fetch(`https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&key=${API_KEY}`);
+            if (!videoId) throw new Error("The provided URL is invalid. It should be a YouTube video URL.");
 
-            if (!response.ok) { // if the fetch failed, throw an error
-                throw new Error(response.statusText);
-            }
-
-            let currentThread = await response.json() as CommentThread;
-            allComments = allComments.concat(currentThread.items.map(item => convertItemToComment(item)));
-
-            while (currentThread.nextPageToken) {
-                const data = await fetch(`https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&key=${API_KEY}&pageToken=${currentThread.nextPageToken}`);
-                if (!data.ok) { // if the fetch failed, throw an error
-                    throw new Error(data.statusText);
-                }
-                currentThread = await data.json() as CommentThread;
-                allComments = allComments.concat(currentThread.items.map(item => convertItemToComment(item)));
-            }
-
-            if (allComments.length === 0) { // if there is no comments, throw an error
-                throw new Error(`No comments found for the given video`);
-            }
+            allComments = await this.fetchComments(videoId);
 
             return allComments[Math.floor(Math.random() * allComments.length)];
         } catch (error) {
             console.error(error);
-            console.log('kek');
-            throw new Error(`An error occurred: ${error}`);
+            throw error;
         }
     }
+
+    static async fetchComments(videoId: string, pageToken?: string): Promise<DisplayedComment[]> {
+        const url = `${BASE_URL}&videoId=${videoId}&key=${API_KEY}${pageToken ? `&pageToken=${pageToken}` : ''}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch comments: ${response.statusText}`);
+        }
+
+        let currentThread = await response.json() as CommentThread;
+        let allComments = currentThread.items.map(item => convertItemToComment(item));
+
+        if (currentThread.nextPageToken) {
+            allComments = allComments.concat(await this.fetchComments(videoId, currentThread.nextPageToken));
+        }
+
+        return allComments;
+    }
 }
+
 
 
 function convertItemToComment(item: Item) {

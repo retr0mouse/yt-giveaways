@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Confetti from 'react-confetti';
 import { YoutubeApi } from './api/YoutubeApi';
 import { DisplayedComment } from './types/DisplayedComment';
-import Confetti from 'react-confetti';
 
 function App() {
   const [comment, setComment] = useState<DisplayedComment | null>();
   const [videoUrl, setVideoUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [party, setParty] = useState(false);
-
+  const [error, setError] = useState<string | null>(null);
 
   async function getData(url: string) {
     setIsLoading(true);
@@ -16,20 +16,19 @@ function App() {
       const pickedComment = await YoutubeApi.getRandomComment(url);
       if (!pickedComment) {
         console.error("No comment received from the API");
+        setError("No comment received from the API");
       } else {
         setComment(pickedComment);
+        setError(null);
       }
     } catch (error) {
       console.error("Error fetching data from the API:", error);
       setComment(null);
+      setError("Error fetching data from the API");
     }
     setIsLoading(false);
     setParty(true);
   }
-
-  useEffect(() => {
-    console.log(party);
-  }, [party]) 
 
   return (
     <>
@@ -44,6 +43,7 @@ function App() {
           Pick
         </button>
       </div>
+      <p>{error}</p>
       <div>
         {
           isLoading ?
