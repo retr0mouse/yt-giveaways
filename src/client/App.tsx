@@ -36,7 +36,7 @@ function App() {
       <div className="input-container">
         <label className="url-label" htmlFor="url-input">YouTube video URL</label>
         <input className="url-input" type="text" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" onKeyDown={(e) => (
-          e.key === 'Enter' ?  videoUrl ? getData(videoUrl): null : null)} value={videoUrl} onChange={(input) => setVideoUrl(input.target.value)} />
+          e.key === 'Enter' ? videoUrl ? getData(videoUrl) : null : null)} value={videoUrl} onChange={(input) => setVideoUrl(input.target.value)} />
         <button onClick={() =>
           videoUrl ? getData(videoUrl) : null
         }>
@@ -52,7 +52,7 @@ function App() {
             comment ?
               <>
                 <Confetti
-                  style={{position: "fixed", top: 0, left: 0}}
+                  style={{ position: "fixed", top: 0, left: 0 }}
                   width={window.innerWidth}
                   height={window.innerHeight}
                   run={party}
@@ -60,7 +60,7 @@ function App() {
                   numberOfPieces={1000}
                   recycle={false}
                 />
-               <div className="comment-container">
+                <div className="comment-container">
                   <img className="pfp" src={comment.authorProfileImageUrl} alt="Profile picture" />
                   <div className="comment-data">
                     <div className="comment-user">
@@ -72,8 +72,8 @@ function App() {
                       {/* <p className="rating">rating: {comment.viewerRating}</p> */}
                     </div>
                   </div>
-               </div>
-               </>
+                </div>
+              </>
               :
               <p>The winner will appear here</p>
         }
