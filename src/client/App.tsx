@@ -68,7 +68,7 @@ function App() {
                       <p className="comment-text">{comment.text}</p>
                     </div>
                     <div className="comment-meta">
-                      <p className="like-count"><img height="30rem" src="../public/thumb-up.svg" alt="Thumb up" /> {comment.likeCount}</p>
+                      <p className="like-count"><img height="30rem" src="images/thumb-up.svg" alt="Thumb up" /> {comment.likeCount}</p>
                       {/* <p className="rating">rating: {comment.viewerRating}</p> */}
                     </div>
                   </div>
