@@ -12,13 +12,9 @@ app.use(cors());
 
 app.get('/api/getComments', async (req: Request, res: Response) => {
     const videoUrl = req.query.videoUrl as string;
-    // console.log(`Video URL: ${videoUrl}`);
-    // const formattedUrl = videoUrl.substring(1, videoUrl.length - 1);
     try {
         const allComments = await fetchComments(videoUrl);
         const filteredComments = removeDuplicateComments(allComments);
-        console.log(`Fetched ${allComments.length} comments.`);
-        console.log(`Filtered ${filteredComments.length} comments.`);
         res.send(filteredComments);
     } catch (error: any) {
         console.error(error);
