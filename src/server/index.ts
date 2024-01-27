@@ -1,7 +1,10 @@
-import express, { Request, Response } from 'express';
 import cors from 'cors';
+import express, { Request, Response } from 'express';
+import fetch from 'node-fetch';
 
-const BASE_URL = 'https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet';
+const COMMENT_THREADS_API_URL = 'https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet';
+const SUBSCRIPTIONS_API_URL = 'https://youtube.googleapis.com/youtube/v3/subscriptions?part=snippet';
+const VIDEOS_API_URL = 'https://youtube.googleapis.com/youtube/v3/videos?part=snippet';
 const API_KEY = 'AIzaSyCPEDr5QVi6rbthmGTmqowctbm7-kfe4IY'
 const app = express();
 const port = 3000;
@@ -25,12 +28,9 @@ app.get('/api/getComments', async (req: Request, res: Response) => {
 
 async function fetchComments(videoUrl: string, pageToken?: string): Promise<any[]> {
     const videoId = videoUrl.split("?v=")[1];
-    // console.log(`Video ID: ${videoUrl}`);
     if (!videoId) throw new Error("The provided URL is invalid. It should be a YouTube video URL.");
 
-    const url = `${BASE_URL}&videoId=${videoId}&key=${API_KEY}${pageToken ? `&pageToken=${pageToken}` : ''}`;
-    // console.log(`Fetch URL: ${url}`);
-    const response = await fetch(url);
+    const response = await fetch(`${COMMENT_THREADS_API_URL}&videoId=${videoId}&key=${API_KEY}${pageToken ? `&pageToken=${pageToken}` : ''}`);
 
     if (!response.ok) throw new Error(`Failed to fetch comments: ${response.statusText}`);
     const commentThread = await response.json() as CommentThread;
@@ -38,7 +38,6 @@ async function fetchComments(videoUrl: string, pageToken?: string): Promise<any[
 
     if (commentThread.nextPageToken) {
         const nextPageComments = await fetchComments(videoUrl, commentThread.nextPageToken);
-        // console.log(`Fetched ${nextPageComments.length} comments.`);
         return allComments.concat(nextPageComments);
     }
 
@@ -58,6 +57,7 @@ function removeDuplicateComments(comments: DisplayedComment[]) {
 function convertItemToComment(item: Item) {
     return {
         username: item.snippet.topLevelComment.snippet.authorDisplayName,
+        userId: item.snippet.topLevelComment.snippet.authorChannelId.value,
         text: item.snippet.topLevelComment.snippet.textDisplay,
         authorProfileImageUrl: item.snippet.topLevelComment.snippet.authorProfileImageUrl,
         viewerRating: item.snippet.topLevelComment.snippet.viewerRating,

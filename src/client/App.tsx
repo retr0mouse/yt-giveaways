@@ -61,16 +61,21 @@ function App() {
                   recycle={false}
                 />
                 <div className="comment-container">
-                  <img className="pfp" src={comment.authorProfileImageUrl} alt="Profile picture" />
+                  <a className="pfp" href={`http://www.youtube.com/channel/${comment.userId}`} target='_blank'>
+                    <img className="pfp" src={comment.authorProfileImageUrl} alt="Profile picture" />
+                  </a>
                   <div className="comment-data">
                     <div className="comment-user">
-                      <p className="comment-username">{comment.username}</p>
+                      <a className="comment-username" href={`http://www.youtube.com/channel/${comment.userId}`} target='_blank'>
+                        <p>{comment.username}</p>
+                      </a>
                       <p className="comment-text">{comment.text}</p>
+
                     </div>
-                    <div className="comment-meta">
-                      <p className="like-count"><img height="30rem" src="images/thumb-up.svg" alt="Thumb up" /> {comment.likeCount}</p>
-                      {/* <p className="rating">rating: {comment.viewerRating}</p> */}
-                    </div>
+                    {/* <div className="comment-meta">
+                      <p className="like-count"><img height="30rem" src="images/thumb-up.svg" alt="Thumb up" /> {comment.likeCount}</p> */}
+                    {/* <p className="rating">rating: {comment.viewerRating}</p> */}
+                    {/* </div> */}
                   </div>
                 </div>
               </>

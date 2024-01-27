@@ -7,7 +7,7 @@ export class YoutubeApi {
         try {
             const allCommentsResponse = await fetch(`${BACKEND_URL}/api/getComments?videoUrl=${videoUrl}`);
             if (!allCommentsResponse.ok) throw new Error(`Failed to fetch comments: ${allCommentsResponse.statusText}`);
-            const allComments = await allCommentsResponse.json();
+            const allComments = await allCommentsResponse.json() as DisplayedComment[];
             if (!allComments || allComments.length === 0) {
                 throw new Error("No comments were found for this video.");
             }
