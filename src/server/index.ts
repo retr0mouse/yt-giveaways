@@ -22,6 +22,10 @@ app.get('/api/getComments', async (req: Request, res: Response) => {
     }
 });
 
+app.get('/', (req: Request, res: Response) => {
+    res.status(200).send("Hello, world!");
+});
+
 async function fetchComments(videoUrl: string, pageToken?: string): Promise<any[]> {
     const videoId = videoUrl.split("?v=")[1];
     if (!videoId) throw new Error("The provided URL is invalid. It should be a YouTube video URL.");
