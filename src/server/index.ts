@@ -7,7 +7,7 @@ const SUBSCRIPTIONS_API_URL = 'https://youtube.googleapis.com/youtube/v3/subscri
 const VIDEOS_API_URL = 'https://youtube.googleapis.com/youtube/v3/videos?part=snippet';
 const API_KEY = 'AIzaSyCPEDr5QVi6rbthmGTmqowctbm7-kfe4IY'
 const app = express();
-const port = 3000;
+const port = (process.env.PORT || 5000)
 app.use(cors());
 
 app.get('/api/getComments', async (req: Request, res: Response) => {
