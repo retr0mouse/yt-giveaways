@@ -1,6 +1,6 @@
 import { DisplayedComment } from "../types/DisplayedComment";
 
-const BACKEND_URL = "https://yt-giveaways-fb3ebf590975.herokuapp.com/";
+const BACKEND_URL = "https://yt-giveaways-fb3ebf590975.herokuapp.com";
 
 export class YoutubeApi {
     static async getRandomComment(videoUrl: string): Promise<DisplayedComment> {

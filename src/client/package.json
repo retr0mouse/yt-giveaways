@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "deploy": "npm run build && gh-pages -d dist -r \"https://github.com/retr0mouse/yt-giveaways.git\"",
+    "clear": "node node_modules/gh-pages/bin/gh-pages-clean.js",
+    "deploy": "npm run clear && npm run build && gh-pages -d dist -r \"https://github.com/retr0mouse/yt-giveaways.git\" -b gh-pages",
     "init-deploy": "npm run build && gh-pages -d dist -b gh-pages -r \"https://github.com/retr0mouse/yt-giveaways.git\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
